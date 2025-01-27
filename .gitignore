@@ -2,6 +2,9 @@
 logs
 *.log
 
+# Next
+**/.next
+
 # Dependency directory
 node_modules/*
 **/node_modules/*
