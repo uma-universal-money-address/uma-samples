@@ -1,0 +1,5 @@
+$z_elements: header, modal, popup;
+
+@function zIndex($name) {
+  @return index($z_elements, $name);
+}

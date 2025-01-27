@@ -1,0 +1,21 @@
+@use "sass:math";
+
+@function media-min($query: null) {
+  @if is-number($query) and index('px', unit($query)) {
+    @return (math.div($query, 16px) * 1em);
+  } @else if is-number($query) and index('em', unit($query)) {
+    @return $query;
+  } @else {
+    @error 'Value must be in Pixels or EMs';
+  }
+}
+
+@function media-max($query: null) {
+  @if is-number($query) and index('px', unit($query)) {
+    @return (math.div(($query - 1px), 16px) * 1em);
+  } @else if is-number($query) and index('em', unit($query)) {
+    @return math.div(($query * 16) - 1, 16);
+  } @else {
+    @error 'Value must be in Pixels or EMs';
+  }
+}

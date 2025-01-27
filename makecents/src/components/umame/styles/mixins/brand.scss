@@ -1,0 +1,9 @@
+@use 'sass:color';
+
+@function rgbValues($colour) {
+  @return color.red($colour), color.green($colour), color.blue($colour);
+}
+
+@function brand($opacity: 1) {
+  @return rgba(var(--theme-rgb-color), $opacity);
+}

@@ -1,0 +1,212 @@
+@use 'config' as *;
+@use 'fonts';
+@use 'theme';
+
+:root {
+  font-size: 62.5%;
+  --scrollbar-width: calc(100vw - 100%);
+
+  --grid-overlay-page-width: #{$page-width};
+  --grid-overlay-gutter: #{$container-gutter};
+
+  // scale rem based values down on small but wide screens (small laptops etc.)
+  @media (min-aspect-ratio: 3/2) {
+    font-size: clamp(calc(62.5% * 0.8), calc((62.5% * 0.45) + 0.5vh), 62.5%);
+  }
+}
+
+// set default box-sizing on all elements to border-box
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100vh;
+  width: 100%;
+
+  background: $color-background;
+}
+
+html {
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  // always show the vertical scrollbar so that content doesn't jump
+  overflow-y: scroll;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  position: relative;
+
+  margin: 0;
+
+  font-family: $font-family;
+  font-size: $font-size;
+  line-height: $line-height;
+  color: $color-font;
+
+  // iOS on orientation change
+  text-size-adjust: 100%;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// selection color
+::selection {
+  color: #fff;
+  background: $color-primary;
+}
+
+/* POC cookie override */
+
+.osano-cm-button {
+  background: #000 !important;
+  border: 0 !important;
+  border-radius: 97px !important;
+
+  padding: 11px 20px;
+
+  font-family: 'Manrope', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+
+  /* White */
+  color: #ffffff;
+
+  &:hover {
+    background: $color-primary !important;
+  }
+}
+
+.osano-cm-dialog__close {
+  color: #000 !important;
+  stroke: #000 !important;
+}
+
+.osano-cm-dialog__close:hover {
+  stroke: #151515 !important;
+}
+
+.osano-cm-toggle__switch {
+  background-color: #9f9f9f;
+}
+
+.osano-cm-dialog {
+  background: #fff;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.15);
+  border-top: 1px solid #e6e6e6;
+
+  padding: 20px 30px 20px 20px;
+
+  font-family: 'Manrope', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 140%;
+
+  color: #000000;
+}
+
+.osano-cm-toggle__switch  {
+}
+
+.osano-cm-content__message {
+  margin-bottom: 0;
+  padding-bottom: 1rem;
+}
+
+.osano-cm-dialog--type_bar .osano-cm-dialog__content {
+  margin-bottom: 0.5rem;
+}
+
+.osano-cm-link {
+  color: #000;
+  font-weight: 600;
+}
+
+.osano-cm-dialog--type_box {
+  max-width: 24em;
+}
+.osano-cm-dialog--type_bar .osano-cm-dialog__content {
+  margin-right: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.osano-cm-dialog--type_box .osano-cm-dialog__buttons {
+  margin-top: 2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .osano-cm-dialog--type_bar .osano-cm-dialog__list {
+    margin-top: 1em;
+  }
+}
+
+.osano-cm-dialog__content.osano-cm-content::before {
+  content: 'Cookie Preferences\A';
+
+  display: block;
+
+  padding-bottom: 7px;
+
+  font-family: 'Manrope', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.2;
+
+  color: #000000;
+}
+
+.osano-cm-list-item__toggle {
+  margin-right: 1em;
+}
+
+.osano-cm-widget {
+  background-image: url(/svg/cookie.svg);
+  background-size: 30px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+
+  background-color: #ffffff;
+  border: 1px solid #eceaf1;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+
+  &:hover {
+    background-color: #e6e6e6;
+  }
+}
+.osano-cm-widget svg {
+  display: none;
+}
+
+.osano-cm-widget:focus,
+.osano-cm-widget:hover {
+  opacity: 1;
+  transform: none;
+}
+
+.osano-cm-widget:active {
+  transform: translateY(1px);
+}
+
+.osano-cm-widget {
+  display: none;
+}
