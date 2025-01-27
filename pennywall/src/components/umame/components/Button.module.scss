@@ -1,0 +1,441 @@
+@use '../styles/config' as *;
+
+.button {
+  @include reset-button;
+
+  display: inline-flex;
+  align-self: center;
+  justify-content: center;
+  position: relative;
+
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+
+  border-color: transparent;
+  border-style: solid;
+  border-width: 0;
+  border-radius: 10rem;
+  font-weight: bold;
+
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
+
+  cursor: pointer;
+
+  & + & {
+    margin-left: 2rem;
+  }
+
+  &:is(:hover) {
+    .button__svg {
+      transform: translate(150%, -150%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .button__arrowShadow {
+      transform: translate(0%, 0%);
+      transition: transform 0.3s ease-in-out 0.1s;
+    }
+  }
+
+  &:is(:focus-visible) {
+    outline: 3px solid $color-primary;
+  }
+
+  &.primary {
+    transition: all 0.2s ease-in-out;
+
+    background-color: $color-primary;
+    color: #f9f9f9;
+
+    &:is(:hover, :focus-visible) {
+      background-color: #000; //$color-primary;
+    }
+  }
+
+  &.primary-dark {
+    transition: all 0.2s ease-in-out;
+
+    background-color: #16171a;
+    color: #f9f9f9;
+
+    &:is(:hover, :focus-visible) {
+      background-color: #16171a;
+      color: #f9f9f9;
+    }
+  }
+
+  &.blue {
+    transition: all 0.2s ease-in-out;
+    background-color: $color-primary;
+    color: #f9f9f9;
+
+    &:is(:hover, :focus-visible) {
+      color: #000;
+      background-color: #fff; //$color-primary;
+    }
+  }
+
+  &.blue-dark {
+    color: #fff;
+
+    transition: all 0.2s ease-in-out;
+
+    background-color: $color-blue;
+    border: 1px solid $color-blue;
+    color: #fff;
+
+    .button__arrow {
+      color: $color-blue;
+      background-color: #fff;
+    }
+
+    &:is(:hover, :focus-visible) {
+      background-color: #fff;
+      border: 1px solid #fff;
+      color: #000;
+
+      .button__arrow {
+        color: #fff;
+        background-color: #000;
+      }
+    }
+  }
+
+  &.primary-fill {
+    color: #fff;
+
+    transition: all 0.2s ease-in-out;
+
+    &:is(:hover, :focus-visible) {
+      background-color: #000 !important;
+
+      .button__arrow {
+        color: #000 !important;
+      }
+    }
+  }
+
+  &.primary-fill-dark {
+    color: #fff;
+
+    transition: all 0.2s ease-in-out;
+
+    &:is(:hover, :focus-visible) {
+      background-color: #fff !important;
+      color: #000;
+
+      .button__arrow {
+        svg {
+          color: #fff;
+        }
+        background: #000;
+      }
+    }
+  }
+
+  &.secondary {
+    color: #f9f9f9;
+
+    text-align: center;
+    border-radius: 0.6rem;
+    background: #16171a;
+
+    width: 100%;
+    max-width: 100%;
+
+    &:is(:hover, :focus-visible) {
+      color: #fff;
+      background-color: $color-primary;
+    }
+
+    &.medium {
+      border-radius: 99rem;
+    }
+  }
+
+  &.secondary-dark {
+    color: #000;
+    background: #fff;
+
+    text-align: center;
+
+    &:is(:hover, :focus-visible) {
+      color: #fff;
+      background-color: $color-blue;
+
+      .button__arrow {
+        svg {
+          color: $color-blue;
+        }
+        background: #fff;
+      }
+    }
+
+    .button__arrow {
+      svg {
+        color: #fff;
+      }
+      background: #000;
+    }
+  }
+
+  &.outline {
+    color: #000;
+    background: transparent;
+    border: 1px solid #000;
+
+    text-align: center;
+
+    .button__arrow {
+      svg {
+        color: #fff;
+      }
+      background: #000;
+    }
+
+    &:is(:hover, :focus-visible) {
+      color: #fff;
+      background-color: #000;
+
+      .button__arrow {
+        svg {
+          color: #000;
+        }
+        background: #fff;
+      }
+    }
+  }
+
+  &.outline-dark {
+    color: #fff;
+    background: transparent;
+    border: 1px solid #fff;
+
+    text-align: center;
+
+    &:is(:hover, :focus-visible) {
+      color: #000;
+      background-color: #fff;
+
+      .button__arrow {
+        color: #fff;
+        background-color: #000;
+      }
+    }
+
+    // .button__label {
+    //   padding: responsive(0.7rem, 1.2rem) responsive(1.5rem, 3.2rem) responsive(0.7rem, 1.2rem);
+    // }
+  }
+
+  &.inverted {
+    color: #000;
+    background: #fff;
+    border: 1px solid #fff;
+
+    text-align: center;
+
+    .button__arrow {
+      color: #fff;
+      background-color: #000;
+    }
+
+    &:is(:hover, :focus-visible) {
+      color: #fff;
+      background-color: #000;
+      border: 1px solid #000;
+
+      .button__arrow {
+        color: #000;
+        background-color: #fff;
+      }
+    }
+  }
+
+  &.text {
+    background: transparent;
+    color: $color-primary;
+
+    border-radius: 0;
+    transition: border-color 0.2s ease;
+  }
+
+  &.disabled {
+    // tbd
+    cursor: default;
+  }
+
+  &.block {
+    min-width: 100%;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:is(:focus-visible) {
+    outline: 3px solid $color-primary;
+  }
+
+  &__arrow {
+    position: relative;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: responsive(1rem, 1.5rem);
+
+    width: responsive(2.2rem, 3rem);
+    height: responsive(2.2rem, 3rem);
+    border-radius: 50%;
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    overflow: hidden;
+
+    .outline-dark & {
+      background-color: #fff;
+      color: #000;
+    }
+
+    .primary & {
+      background-color: #fff;
+      color: #000;
+    }
+
+    svg {
+      width: responsive(0.9rem, 1.4rem);
+      height: responsive(0.9rem, 1.4rem);
+      // transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    &Shadow {
+      position: absolute;
+      width: responsive(0.9rem, 1.4rem);
+      height: responsive(0.9rem, 1.4rem);
+      transform: translate(-150%, 150%);
+    }
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: opacity 0.2s ease-in-out;
+
+    .small & {
+      padding: 1.2rem 2.2rem;
+      font-size: 1.3rem;
+    }
+
+    .medium & {
+      padding: 1.7rem 2rem 1.7rem 2rem;
+      font-size: 1.6rem;
+    }
+
+    .medium.secondary & {
+      font-weight: 700;
+    }
+
+    .large & {
+      padding: responsive(2rem, 1.8rem) 2.2rem;
+
+      font-size: responsive(1.6rem, 2rem);
+
+      font-weight: 700;
+    }
+
+    .large.secondary & {
+      padding: responsive(1.4rem, 2.4rem) 2.2rem;
+      font-weight: 600;
+
+      font-size: 1.5rem;
+    }
+
+    .text & {
+      padding: 0.2rem 0;
+    }
+  }
+
+  &.fill {
+    // align-self: flex-end;
+    min-width: 0;
+    width: 100%;
+  }
+
+  &__text {
+    span {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-width: 9.4rem;
+    }
+    transition: opacity 0.2s ease-in-out;
+    .loading & {
+      opacity: 0;
+    }
+  }
+
+  &__loading {
+    @include fit;
+    width: 3.6rem;
+    left: calc(50% - 1.8rem);
+    top: 19%;
+
+    div {
+      position: absolute;
+      top: 13px;
+      left: 15px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fff;
+      animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+    div:nth-child(1) {
+      left: 4px;
+      animation: lds-ellipsis1 0.6s infinite;
+    }
+    div:nth-child(2) {
+      left: 4px;
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+    div:nth-child(3) {
+      left: 16px;
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+    div:nth-child(4) {
+      left: 28px;
+      animation: lds-ellipsis3 0.6s infinite;
+    }
+  }
+
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(12px, 0);
+    }
+  }
+}

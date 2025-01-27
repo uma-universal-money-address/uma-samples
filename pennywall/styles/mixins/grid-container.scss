@@ -1,0 +1,55 @@
+@use '../variables' as *;
+
+@mixin container($gutter: $container-gutter) {
+  display: grid;
+  grid-template-columns:
+    [full-start] $gutter [gutter-start] auto [wide-start] minmax(auto, 18rem) [main-start] min(
+      $page-width,
+      calc(100% - calc(#{$gutter} * 2))
+    )
+    [main-end] minmax(auto, 18rem) [wide-end] auto [gutter-end] $gutter [full-end];
+
+  > * {
+    grid-column: main-start/main-end;
+  }
+}
+
+@mixin container-full($gutter: $container-gutter) {
+  @include container($gutter);
+
+  > * {
+    grid-column: full-start/full-end;
+  }
+}
+
+@mixin container-gutter($gutter: $container-gutter) {
+  @include container($gutter);
+
+  > * {
+    grid-column: gutter-start/gutter-end;
+  }
+}
+
+@mixin container-wide($gutter: $container-gutter) {
+  @include container($gutter);
+
+  > * {
+    grid-column: wide-start/wide-end;
+  }
+}
+
+@mixin container-offset-left($gutter-offset: $container-gutter-offset) {
+  @include container($gutter);
+
+  > * {
+    grid-column: full-start/main-end;
+  }
+}
+
+@mixin container-offset-right($gutter-offset: $container-gutter-offset) {
+  @include container($gutter);
+
+  > * {
+    grid-column: main-start/full-end;
+  }
+}

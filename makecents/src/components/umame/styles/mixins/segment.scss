@@ -1,0 +1,33 @@
+@use '../variables' as *;
+@use './responsive' as r;
+
+@mixin segment-top($padding: $segment-padding) {
+  padding-top: $padding;
+}
+
+@mixin segment-bottom($padding: $segment-padding) {
+  padding-bottom: $padding;
+}
+
+@mixin segment($padding: $segment-padding) {
+  @include segment-top($padding);
+  @include segment-bottom($padding);
+}
+
+@mixin slice-segment($padding: $segment-padding) {
+  &:not(:first-child) {
+    @include segment-top($padding);
+  }
+
+  &:not(:last-child) {
+    @include segment-bottom($padding);
+  }
+
+  &:first-child {
+    @include segment-top(r.responsive(20rem, 45rem));
+  }
+
+  &:last-child {
+    @include segment-bottom(r.responsive(20rem, 58rem));
+  }
+}
