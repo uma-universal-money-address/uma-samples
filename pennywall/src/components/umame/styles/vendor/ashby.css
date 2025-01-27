@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900|Roboto+Mono:400,500&display=fallback');
+
+:root {
+  --fontFamily: "Montserrat", "Whitney SSm", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Helvetica", "Arial", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  --borderWidthBold: 1px;
+  --widthMaxJobBoard: 1024px;
+
+  /*
+   *  WARNING
+   *  If you want to add/modify you need to make sure your changes work with the
+   *  theme colors users can set in our admin section.
+   */
+  --colorAppBackground: #fff;
+  --colorPrimary900: #000 !important;
+  --colorPrimary600: orange;
+  --colorNegative200: #fce8e8;
+  --colorPositive200: #eafcec;
+  --colorWarning800: #8c6d1f;
+  --colorWarning600: #f4ca64;
+  --colorNegative600: #dc3030;
+  --colorPositive600: #29b458;
+  --colorWarning900: #5c4813;
+}
+
+/* A container for the application form. */
+.ashby-application-form-container {
+
+}
+
+/* A container for the failure message */
+.ashby-application-form-failure-container {}
+
+/* A container for the label and input on an application form. */
+.ashby-application-form-field-entry {}
+
+/* The description of each question on an application form. Will only show if a description is specified. */
+.ashby-application-form-question-description {}
+
+/* The title of each question on an application form. */
+.ashby-application-form-question-title {
+}
+
+.ashby-application-form-question-title::after {
+}
+
+/* A single section on the Ashby application form. All questions will be wrapped in sections, though the default section may not have a title. */
+.ashby-application-form-section-container {}
+
+/* The header for an application form section, possibly containing a title and description. */
+.ashby-application-form-section-header {}
+
+/* The description for an application form section. May not exist if no description was specified. */
+.ashby-application-form-section-header-description {}
+
+/* The title for an application form section. May not exist for the default section. */
+.ashby-application-form-section-header-title {
+
+}
+
+/* The application submission button. Will have loading and hover states that should be tested. */
+.ashby-application-form-submit-button {}
+
+/* A container for the success message */
+.ashby-application-form-success-container {}
+
+/* The heading of a department, which can have many teams under it. */
+.ashby-department-heading {}
+
+/* The heading of a single team. */
+.ashby-department-heading-level {}
+
+/* A select box element for filtering the job board. */
+.ashby-job-board-filter {}
+
+/* The heading of the entire job board. */
+.ashby-job-board-heading {}
+
+/* The count of job postings on the job board. */
+.ashby-job-board-heading-count {}
+
+/* The container of the job posting details pane. */
+.ashby-job-posting-brief {}
+
+/* The heading of a department name. Departments group teams. */
+.ashby-job-posting-brief-department-heading {}
+
+/* The heading of a single team. */
+.ashby-job-posting-brief-department-heading-level {}
+
+/* The container for the details of the job posting, in the details pane. */
+.ashby-job-posting-brief-details {}
+
+/* The container for the list of job post briefings. */
+.ashby-job-posting-brief-list {}
+
+/* The title of the job posting in the details pane. */
+.ashby-job-posting-brief-title {}
+
+/* The heading of a job post */
+.ashby-job-posting-heading {}
+
+/* A container for any surveys specified for this application form. */
+.ashby-survey-form-container {}

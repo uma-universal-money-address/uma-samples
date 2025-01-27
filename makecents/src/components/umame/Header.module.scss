@@ -1,0 +1,263 @@
+@use './styles/config' as *;
+
+.header {
+  @include container;
+
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 10;
+
+  padding: 2.1rem 0;
+  background-color: #16171A;
+
+  &.sticky {
+    background: rgba(249, 249, 249, 0.84);
+    backdrop-filter: blur(22px);
+    background-color: #16171A;
+
+    @media (min-width: $min-tablet) {
+      background: transparent;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (max-width: $max-tablet) {
+    // workaround for init mobile fade blink
+    opacity: 1 !important;
+    position: fixed;
+  }
+
+  @media (min-width: $min-tablet) {
+    position: absolute;
+    padding: responsive(2rem, 6rem) 0 4rem;
+    border: 0;
+    background-color: transparent;
+  }
+
+  transition: color 0.2s ease-in-out;
+
+  &.darkHeader {
+    color: #fff;
+  }
+
+  &.isDark {
+    color: #fff;
+  }
+
+  &__pill {
+    @include fit;
+
+    z-index: 0;
+    border-radius: 10rem;
+
+    border-radius: 9999px;
+    background: #ebeef2;
+  }
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media (min-width: $min-desktop) {
+      margin-left: 8.6%;
+      margin-right: 8.6%;
+    }
+  }
+
+  &__logo {
+    @include anchor;
+
+    display: inline-flex;
+    align-items: center;
+
+    color: inherit;
+
+    margin-top: 0.3rem;
+    margin-right: 2rem;
+
+    &:is(:focus-visible) {
+      outline: 2px solid $color-primary;
+    }
+  }
+
+  &__block {
+  }
+
+  &__svg {
+    width: 4.7rem;
+  }
+
+  &__navlist {
+    @include reset-list;
+
+    display: flex;
+  }
+
+  &__navitem {
+    position: relative;
+
+    &:is(:hover, :focus-visible) {
+      .header__subnav {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+    }
+
+    &:has(:focus-visible) {
+      .header__subnav {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+    }
+
+    &:is(:focus-visible) {
+      outline: 2px solid $color-primary;
+    }
+
+    &Compact {
+      margin-right: -1.2rem;
+    }
+  }
+
+  &__navigation {
+    display: none;
+
+    @media (min-width: $min-tablet) {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__link {
+    @include reset-anchor;
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    z-index: 1;
+
+    padding: 0.9rem 2.8rem 1rem;
+
+    font-weight: 700;
+    font-size: 14px;
+
+    color: inherit;
+
+    .header__icon {
+      position: relative;
+      top: 0.2rem;
+      margin-right: 0.5rem;
+      transform: scale(0);
+      opacity: 0;
+
+      max-width: 2.4rem;
+      max-height: 2.9rem;
+
+      transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    }
+
+    &:is(:hover, :focus-visible) {
+      color: #111; // Change hover text color to black
+      .header__icon {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    &:is(:focus-visible) {
+      outline: 2px solid $color-primary;
+    }
+
+    &.active {
+      border-bottom: 1px solid currentColor;
+    }
+
+    &.chevron {
+      padding-right: 1rem;
+    }
+  }
+
+  &__hamburger {
+    @include reset-button;
+
+    padding-top: 3px;
+
+    cursor: pointer;
+
+    @media (min-width: $min-tablet) {
+      display: none;
+    }
+  }
+
+  &__sticky {
+    position: fixed;
+    bottom: 3.5rem;
+    left: 0;
+    right: 0;
+    height: 100px;
+    display: none;
+    z-index: 2;
+    pointer-events: none;
+
+    transition: opacity 0.2s ease-in-out, pointer-events 0.2s ease-in-out;
+
+    @media (min-width: $min-tablet) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &.active {
+      pointer-events: auto;
+    }
+  }
+
+  &__stickyWrap {
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__stickyShadow {
+    position: absolute;
+    top: 100%;
+  }
+
+  &__stickyTitle {
+    padding: 0.3rem 0;
+  }
+
+  &__stickyNav {
+    @include reset-list;
+    display: inline-flex;
+    border-radius: 9999px;
+
+    border: 0.5px solid rgba(163, 167, 180, 0.2);
+    background: rgba(194, 198, 208, 0.44);
+    box-shadow: 0px 1px 24px 0px rgba(0, 0, 0, 0.05), 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(36px);
+
+    padding: 0 1.5rem;
+
+    margin: 3rem auto;
+  }
+
+  &__stickyLink {
+    @include reset-anchor;
+    display: inline-flex;
+    padding: 1.6rem 1.6rem;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #454850;
+    }
+  }
+}
