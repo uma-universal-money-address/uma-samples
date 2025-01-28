@@ -18,14 +18,12 @@ To run the server for these demos, follow these steps:
    npm install
    ```
 
-1. [Register the client app for Nostr.](https://docs.uma.me/uma-auth/uma-auth-client/client-app-registration)
-
-2. Configure the `NWC_URL` environment variable with a Nostr Wallet Connect URL. This URL should be capable of handling small payouts to users. You can set this variable in your terminal session or in a `.env` file in the root of your project:
+4. Configure the `NWC_URL` environment variable with a Nostr Wallet Connect URL. This URL should be capable of handling small payouts to users. You can set this variable in your terminal session or in a `.env` file in the root of your project:
    ```bash
    export NWC_URL="your_nostr_wallet_connect_url_here"
    ```
 
-3. Start the development server with the configured environment variable:
+5. Start the development server with the configured environment variable:
    ```bash
    npm run dev
    ```

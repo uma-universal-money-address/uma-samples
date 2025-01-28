@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 const Redirector = dynamic(() => import("@/components/Redirector"), {
   ssr: false,
 });
-const Paper = dynamic(() => import("@/app/Paper"), { ssr: false });
+const Paper = dynamic(() => import("@/app/pennywall/Paper"), { ssr: false });
 const UmaConnectButton = dynamic(
   () => import("@uma-sdk/uma-auth-client").then((mod) => mod.UmaConnectButton),
   { ssr: false },
@@ -17,7 +17,7 @@ export default function Page() {
   const [redirectUri, setRedirectUri] = useState("");
 
   useEffect(() => {
-    setRedirectUri(`${window.location.origin}`);
+    setRedirectUri(`${window.location.origin}/pennywall`);
   }, []);
 
   return (

@@ -4,7 +4,7 @@ import { useNwcRequester, useOAuth } from "@uma-sdk/uma-auth-client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Redirector({ redirectTo = "/pennywall" }) {
+export default function Redirector({ redirectTo = "/" }) {
   const { nwcRequester } = useNwcRequester();
   const { authConfig } = useOAuth();
   const router = useRouter();
