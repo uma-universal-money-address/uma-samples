@@ -1,21 +1,21 @@
 "use client";
 
-import IntroModal from "@/app/IntroModal";
+import IntroModal from "@/app/pennywall/IntroModal";
 import LoadingOverlay from "@/components/LoadingOverlay";
-import Paper from "@/app/Paper";
+import Paper from "@/app/pennywall/Paper";
 import dynamic from "next/dynamic";
 import { usePayToAddress } from "@/hooks/usePayToAddress";
 import useUmaIsReady from "@/hooks/useUmaIsReady";
 import { useCallback, useEffect, useState } from "react";
 
 const ScrollIndicator = dynamic(
-  () => import("@/app/ScrollIndicator"),
+  () => import("@/app/pennywall/ScrollIndicator"),
   {
     ssr: false,
   },
 );
 
-const WalletWidget = dynamic(() => import("@/app/WalletWidget"), {
+const WalletWidget = dynamic(() => import("@/app/pennywall/WalletWidget"), {
   ssr: false,
 });
 

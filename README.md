@@ -1,3 +1,9 @@
+# UMA Samples
+
+Welcome to the UMA Samples repo, here you'll find samples highlighting novel experiences that instant, low-cost UMA payments can enable.   Each directory contains a separate sample.  Below is a short description of each.
+
+If you're looking for for language specific samples, you can find them in each language SDK repo.
+
 ## MakeCents
 
 MakeCents is a video player demo that showcases the integration of UMA (Universal Money Address) to incentivize viewers by paying them for watching advertisements. This demo highlights how users can earn money by engaging with video content, providing a unique and rewarding ad experience.
