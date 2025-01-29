@@ -3,7 +3,6 @@
 
 import { webln } from "@getalby/sdk";
 import { NextResponse } from "next/server";
-import { NwcRequester } from "@uma-sdk/uma-auth-client";
 import { NOSTR_RELAY } from "@/utils/config";
 
 import WebSocket from "ws";
@@ -19,29 +18,27 @@ async function umaPayment(
   }
 
   try {
-    const nwc = new NwcRequester(process.env.NWC_URL, () => {});
+    const nwc = new webln.NWC({
+      nostrWalletConnectUrl: process.env.NWC_URL,
+      relayUrl: "wss://relay.getalby.com",
+    });
 
-    // const nwc = new webln.NWC({
-    //   nostrWalletConnectUrl: process.env.NWC_URL,
-    //   relayUrl: "wss://relay.getalby.com",
-    // });
+    await nwc.enable();
 
-    // await nwc.enable();
+    console.log("Attempting payment...");
+    console.log("Payload:", {
+      receiver: { lud16: umaAddress },
+      sending_currency_code: currency,
+      sending_currency_amount: amount,
+    });
 
-    // console.log("Attempting payment...");
-    // console.log("Payload:", {
-    //   receiver: { lud16: umaAddress },
-    //   sending_currency_code: currency,
-    //   sending_currency_amount: amount,
-    // });
+    const response = await nwc.client.payToAddress({
+      receiver: { lud16: umaAddress },
+      sending_currency_code: currency,
+      sending_currency_amount: amount,
+    });
 
-    // const response = await nwc.payToAddress({
-    //   receiver: { lud16: umaAddress },
-    //   sending_currency_code: currency,
-    //   sending_currency_amount: amount,
-    // });
-return null;
-    // return response;
+    return response;
   } catch (error) {
     console.error("Payment failed: ", error);
     throw new Error("Payment failed");
