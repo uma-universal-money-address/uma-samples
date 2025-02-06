@@ -41,7 +41,7 @@ export default function Page() {
   const playerRef = useRef<{ restartVideo: () => void } | null>(null);
 
   useEffect(() => {
-    setRedirectUri(`${window.location.origin}/makecents`);
+    setRedirectUri(`${window.location.origin}/`);
   }, []);
 
   const fetchBitcoinData = () => {
