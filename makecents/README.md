@@ -26,7 +26,7 @@ To run the server for these demos, follow these steps:
 
 5. Modify your `src/utils/config.ts` file to update the `CLIENT_ID` values you received from the registration process. 
 
-6. Create a UMA NWC url to represent the payer at [umanwc.sandbox.uma.me](https://umanwc.sandbox.uma.me).  Click the Manual connection button, create the manual connection then copy the URL.
+6. Create a UMA NWC url to represent the payer at [umanwc.test.uma.me](https://umanwc.test.uma.me).  Click the Manual connection button, create the manual connection then copy the URL.
    
 7. Configure the `NWC_URL` environment variable with the copied URL. You can set this variable in your terminal session or in a `.env` file in the root of your project:
    ```bash

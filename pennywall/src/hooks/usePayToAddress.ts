@@ -12,7 +12,7 @@ export const usePayToAddress = () => {
     }
 
     return await nwcRequester.payToAddress({
-      receiver: { lud16: "$receiver@demo2.pinkdrink.app" },
+      receiver: { lud16: "$usa@test.uma.me" },
       sending_currency_code: "SAT",
       sending_currency_amount: amount,
     });
