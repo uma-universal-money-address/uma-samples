@@ -12,7 +12,7 @@
     "@getalby/sdk": "file:getalby-sdk-3.5.1.tgz",
     "@svgr/webpack": "^8.1.0",
     "@types/lodash": "^4.17.13",
-    "@uma-sdk/uma-auth-client": "^0.0.7",
+    "@uma-sdk/uma-auth-client": "^0.0.9",
     "framer-motion": "^11.11.11",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
