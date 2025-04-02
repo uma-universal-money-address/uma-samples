@@ -130,7 +130,7 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="md:p-8 md:pb-[128px]">
       {isModalVisible && (
         <IntroModal
           onAction={() => setIsModalVisible(false)}
@@ -140,7 +140,7 @@ export default function Page() {
       <div
         className={`mx-auto ${isReady ? "mt-[70px]" : "mt-[0px]"} flex flex-col md:mt-[0px] md:max-w-[1166px]`}
       >
-        <div className="fixed top-0 z-[10] w-full justify-end md:relative md:flex md:pt-[40px]">
+        <div className="fixed top-0 z-[10] w-full justify-end md:relative md:flex md:pt-[40px] md:pb-[20px]">
           {isReady && (
             <WalletWidget
               ref={walletWidgetRef}
@@ -149,7 +149,7 @@ export default function Page() {
             />
           )}
         </div>
-        <div className="relative rounded-[40px] shadow-md md:border-[1px] md:border-[#EFEFEF]">
+        <div className="relative rounded-[40px] md:border-[1px] md:border-[#EFEFEF]">
           {isReady ? (
             <>
               <InsetQuestionnaire
@@ -192,15 +192,17 @@ export default function Page() {
                   style={{
                     "--uma-connect-background": "rgb(37, 99, 235)",
                     "--uma-connect-radius": "50px",
-                    "--uma-connect-padding-x": "20px",
-                    "--uma-connect-padding-y": "6px",
+                    "--uma-connect-padding-x": "32px",
+                    "--uma-connect-padding-y": "16px",
                     "--uma-connect-text-color": "#F9F9F9",
-                    "--uma-connect-font-size": "12px",
+                    "--uma-connect-font-size": "16px",
                     display: redirectUri ? "block" : "hidden",
                   }}
                 />
               </div>
-              <MakeCentsStill className="md:rounded-[40px] md:shadow-xl md:p-[20px]" />
+              <div className="inset-0 md:p-[20px] overflow-hidden">
+                <MakeCentsStill className="md:rounded-[20px] h-full w-full md:shadow-lg" />
+              </div>
             </>
           )}
         </div>
@@ -249,38 +251,95 @@ const CommentSection = () => {
         </div>
       </div>
       <div className="space-y-4">
-        {["A", "B", "C"].map((user, index) => (
-          <div key={index} className="flex items-start space-x-3">
-            <div
-              className="flex min-h-[32px] min-w-[32px] h-[32px] w-[32px] items-center justify-center rounded-full"
-              style={{ backgroundColor: profileColors[index] }}
-            >
-              <span className="font-bold text-white">{user}</span>
-            </div>
-            <div>
-              <div className="flex flex-row gap-[8px] items-center">
-                <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
-                  @{user.toLowerCase()}userone
-                </p>
-                <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
-                  1 hour ago
-                </p>
-              </div>
-              <p className="mt-1 text-[14px] font-[500]">
-                Comment to go here, and will add more context for the video
+        {/* Comment 1 */}
+        <div className="flex items-start space-x-3">
+          <div
+            className="flex min-h-[32px] min-w-[32px] h-[32px] w-[32px] items-center justify-center rounded-full"
+            style={{ backgroundColor: "#FF5733" }} // example color
+          >
+            <span className="font-bold text-white">A</span>
+          </div>
+          <div>
+            <div className="flex flex-row gap-[8px] items-center">
+              <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
+                @authdaddy
               </p>
-              <div className="mt-1 flex items-center space-x-2 text-xs text-gray-500">
-                <ThumbsUpLightIcon className="md:hidden" />
-                <ThumbsUpIcon className="hidden md:block" />
-                <span className="text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
-                  {["24", "17", "12"][index]}
-                </span>
-                <ThumbsDownLightIcon className="md:hidden" />
-                <ThumbsDownIcon className="hidden md:block" />
-              </div>
+              <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
+                1 hour ago
+              </p>
+            </div>
+            <p className="mt-1 text-[14px] font-[500]">
+              Just earned sats for watching this — feels wild not waiting 3 days for a wire.
+            </p>
+            <div className="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+              <ThumbsUpLightIcon className="md:hidden" />
+              <ThumbsUpIcon className="hidden md:block" />
+              <span className="text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">24</span>
+              <ThumbsDownLightIcon className="md:hidden" />
+              <ThumbsDownIcon className="hidden md:block" />
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Comment 2 */}
+        <div className="flex items-start space-x-3">
+          <div
+            className="flex min-h-[32px] min-w-[32px] h-[32px] w-[32px] items-center justify-center rounded-full"
+            style={{ backgroundColor: "#33C1FF" }}
+          >
+            <span className="font-bold text-white">B</span>
+          </div>
+          <div>
+            <div className="flex flex-row gap-[8px] items-center">
+              <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
+                @btxn
+              </p>
+              <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
+                1 hour ago
+              </p>
+            </div>
+            <p className="mt-1 text-[14px] font-[500]">
+              Loving how UMA pays mid-video. Got a ping the second I crossed 0:30. 🔥
+            </p>
+            <div className="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+              <ThumbsUpLightIcon className="md:hidden" />
+              <ThumbsUpIcon className="hidden md:block" />
+              <span className="text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">17</span>
+              <ThumbsDownLightIcon className="md:hidden" />
+              <ThumbsDownIcon className="hidden md:block" />
+            </div>
+          </div>
+        </div>
+
+        {/* Comment 3 */}
+        <div className="flex items-start space-x-3">
+          <div
+            className="flex min-h-[32px] min-w-[32px] h-[32px] w-[32px] items-center justify-center rounded-full"
+            style={{ backgroundColor: "#28B463" }}
+          >
+            <span className="font-bold text-white">C</span>
+          </div>
+          <div>
+            <div className="flex flex-row gap-[8px] items-center">
+              <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
+                @chainblock
+              </p>
+              <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
+                1 hour ago
+              </p>
+            </div>
+            <p className="mt-1 text-[14px] font-[500]">
+              If you're watching this and not connected to UMA… you're leaving money on the table 👀
+            </p>
+            <div className="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+              <ThumbsUpLightIcon className="md:hidden" />
+              <ThumbsUpIcon className="hidden md:block" />
+              <span className="text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">12</span>
+              <ThumbsDownLightIcon className="md:hidden" />
+              <ThumbsDownIcon className="hidden md:block" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
