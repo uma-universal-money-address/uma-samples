@@ -131,9 +131,9 @@ export const MakeCentsPlayer = forwardRef(
     }, []);
 
     return (
-      <div ref={containerRef}>
+      <div ref={containerRef} className="md:p-[20px]">
         <div
-          className={`absolute z-[1] flex h-full w-full items-center justify-center transition-opacity duration-500 ${
+          className={`absolute z-[1] top-0 left-0 flex h-full w-full items-center justify-center transition-opacity duration-500  ${
             (isButtonVisible && showControls) || !hasPlayed
               ? "opacity-100"
               : "opacity-0"
@@ -151,13 +151,15 @@ export const MakeCentsPlayer = forwardRef(
           </div>
         </div>
         {(!isPlaying && !hasPlayed || progress >= 100) && (
-          <MakeCentsStill className="absolute h-full w-full md:rounded-[16px] md:p-[20px]" />
+          <div className="absolute inset-0 md:p-[20px] overflow-hidden">
+            <MakeCentsStill className="md:rounded-[20px] h-full w-full" />
+          </div>
         )}
         <video
           ref={videoRef}
           src={videoSrc}
           controls={false}
-          className="w-full md:p-[20px] rounded-xl"
+          className="w-full rounded-[20px] shadow-lg"
         />
         {showControls && hasPlayed && (
           <div className="absolute bottom-0 w-[100%] md:bottom-[36px] md:px-[48px]">
