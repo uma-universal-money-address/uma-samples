@@ -79,10 +79,6 @@ export const PayAnyoneIcon = ({ className }: { className?: string }) => (
   <Icon src="/svgs/payAnyone.svg" alt="Pay Anyone" className={className} />
 );
 
-export const PennywallIcon = ({ className }: { className?: string }) => (
-  <Icon src="/svgs/pennywallIcon.svg" alt="Pennywall" className={className} />
-);
-
 export const MakeCentsIcon = ({ className }: { className?: string }) => (
   <Icon src="/svgs/makeCents.svg" alt="MakeCents" className={className} />
 );
@@ -116,7 +112,11 @@ export const ThumbsUpLightIcon = ({ className }: { className?: string }) => (
 );
 
 export const ThumbsDownLightIcon = ({ className }: { className?: string }) => (
-  <Icon src="/svgs/thumbsDownLight.svg" alt="Thumbs Down" className={className} />
+  <Icon
+    src="/svgs/thumbsDownLight.svg"
+    alt="Thumbs Down"
+    className={className}
+  />
 );
 
 export const RefreshIcon = ({ className }: { className?: string }) => (

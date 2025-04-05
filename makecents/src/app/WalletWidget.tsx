@@ -142,7 +142,9 @@ const WalletWidget = forwardRef(
               balance && (
                 <span className="ml-2 text-[14px] font-bold text-white md:text-[#161718]">
                   {btcPrice !== null
-                    ? `$${convertSatsToUsd(balance.balance, btcPrice).toFixed(2)}`
+                    ? `$${convertSatsToUsd(balance.balance, btcPrice).toFixed(
+                        2
+                      )}`
                     : "Loading..."}
                 </span>
               )
@@ -178,7 +180,7 @@ const WalletWidget = forwardRef(
         </div>
       </>
     );
-  },
+  }
 );
 
 const LoadingIndicator = () => (
