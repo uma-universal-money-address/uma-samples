@@ -68,7 +68,7 @@ export default function WalletWidget({
     // Set the redirect URI based on the current domain
     if (typeof window !== "undefined") {
       const currentDomain = window.location.origin;
-      setRedirectUri(`${currentDomain}/pennywall`);
+      setRedirectUri(`${currentDomain}`);
     }
   }, []);
 
@@ -190,7 +190,7 @@ export default function WalletWidget({
                   </div>
                 ) : (
                   `Unlock Entire Page for ${(pagePrice - amountPaid).toFixed(
-                    2,
+                    2
                   )}`
                 )}
               </button>
