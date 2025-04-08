@@ -17,7 +17,7 @@ export default function Page() {
   const [redirectUri, setRedirectUri] = useState("");
 
   useEffect(() => {
-    setRedirectUri(`${window.location.origin}/pennywall`);
+    setRedirectUri(`${window.location.origin}/`);
   }, []);
 
   return (
