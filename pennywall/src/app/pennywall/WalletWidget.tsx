@@ -68,7 +68,7 @@ export default function WalletWidget({
     // Set the redirect URI based on the current domain
     if (typeof window !== "undefined") {
       const currentDomain = window.location.origin;
-      setRedirectUri(`${currentDomain}`);
+      setRedirectUri(`${currentDomain}/pennywall`);
     }
   }, []);
 
