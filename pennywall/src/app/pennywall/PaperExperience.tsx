@@ -141,6 +141,9 @@ export default function Page() {
   useEffect(() => {
     (async () => {
       if (desiredSectionIndex > 1 && !pageUnlocked) {
+        if (desiredSectionIndex === 10) {
+          setPageUnlocked(true);
+        }
         console.log("New desired section index:", desiredSectionIndex);
         try {
           setPurchasingViewports((prev) =>
