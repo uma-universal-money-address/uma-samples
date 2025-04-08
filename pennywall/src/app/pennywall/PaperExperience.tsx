@@ -141,9 +141,6 @@ export default function Page() {
   useEffect(() => {
     (async () => {
       if (desiredSectionIndex > 1 && !pageUnlocked) {
-        if (desiredSectionIndex === 10) {
-          setPageUnlocked(true);
-        }
         console.log("New desired section index:", desiredSectionIndex);
         try {
           setPurchasingViewports((prev) =>
@@ -152,6 +149,9 @@ export default function Page() {
           await purchaseViewport();
           setAmountPaid(() => viewportPrice * (desiredSectionIndex - 1));
           setAvailableSectionIndex(desiredSectionIndex);
+          if (desiredSectionIndex === 10) {
+            setPageUnlocked(true);
+          }
         } catch (e) {
           console.log("Failed to purchase viewport: ", e);
         } finally {
