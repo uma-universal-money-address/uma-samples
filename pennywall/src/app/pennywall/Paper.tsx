@@ -25,10 +25,6 @@ export default function Paper({
           setAvailableSections((prev) => Math.max(prev, index + 1));
         }
       });
-
-      if (scrollTop + window.innerHeight >= document.body.scrollHeight) {
-        setAvailableSections(9);
-      }
     };
 
     window.addEventListener("scroll", handleScroll);
