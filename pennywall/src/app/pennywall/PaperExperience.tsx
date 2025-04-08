@@ -149,6 +149,11 @@ export default function Page() {
           await purchaseViewport();
           setAmountPaid(() => viewportPrice * (desiredSectionIndex - 1));
           setAvailableSectionIndex(desiredSectionIndex);
+          if (desiredSectionIndex == 10) {
+            setPageUnlocked(true);
+            setAmountPaid(pagePrice);
+            setAvailableSectionIndex(VIEWPORT_COUNT + 1);
+          }
         } catch (e) {
           console.log("Failed to purchase viewport: ", e);
         } finally {
