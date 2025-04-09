@@ -23,6 +23,7 @@ import {
 import { BottomQuestionnaire, InsetQuestionnaire } from "./Questionnaire";
 import WalletWidget from "./WalletWidget";
 import { useNwcRequester } from "@uma-sdk/uma-auth-client";
+import { useSearchParams } from 'next/navigation';
 
 const UmaConnectButton = dynamic(
   () => import("@uma-sdk/uma-auth-client").then((mod) => mod.UmaConnectButton),
@@ -132,39 +133,8 @@ export default function Page() {
   };
 
   
-  const [umaAddress, setUmaAddress] = useState<string | null>(null);
-
-  React.useEffect(() => {
-    const fetchLatestUma = async () => {
-      console.log('fetching latest UMA');
-      try {
-        const response = await fetch('https://test.uma.me/api/user/umas', {
-          credentials: 'include',
-        });
-
-        console.log('response', response);
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch UMAs');
-        }
-
-        const data = await response.json();
-
-        console.log('data', data);
-
-        // Get the last UMA from the array
-        if (data.umas && data.umas.length > 0) {
-          const latestUsername = data.umas[data.umas.length - 1].username;
-          setUmaAddress(latestUsername);
-          console.log('Latest UMA:', latestUsername);
-        }
-      } catch (error) {
-        console.error('Error fetching latest UMA:', error);
-      }
-    };
-
-    fetchLatestUma();
-  }, []);
+  const queryParams = useSearchParams();
+  const umaAddress = queryParams.get('umaAddress');
 
   return (
     <>
@@ -174,8 +144,9 @@ export default function Page() {
         <img src="/makecents.png" className="w-[32px]"/>
         <span className="hidden md:block text-[14px] font-bold">Makescents Demo</span>
       </div>
-      <button
-        className="flex items-center gap-[8px] hover:opacity-50"
+      {umaAddress && (
+        <button
+          className="flex items-center gap-[8px] hover:opacity-50"
         onClick={() => {
           navigator.clipboard.writeText(`${umaAddress ?? "you"}@test.uma.me`);
           toast(
@@ -189,8 +160,9 @@ export default function Page() {
         }}
       >
         <span className="text-[14px] font-bold">${umaAddress ?? "you"}@test.uma.me</span>
-        <img src="/copy.svg" className="w-[24px] md:w-[28px] block" />
-      </button>
+          <img src="/copy.svg" className="w-[24px] md:w-[28px] block" />
+        </button>
+      )}
     </div>
 
 
