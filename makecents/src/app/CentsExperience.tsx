@@ -1,5 +1,7 @@
 "use client";
 
+import { Toaster, toast } from 'sonner'
+import React from "react";
 import dynamic from "next/dynamic";
 import useUmaIsReady from "@/hooks/useUmaIsReady";
 import { useEffect, useState, useRef } from "react";
@@ -129,7 +131,69 @@ export default function Page() {
     return btcAmount * btcPrice;
   };
 
+  
+  const [umaAddress, setUmaAddress] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchLatestUma = async () => {
+      console.log('fetching latest UMA');
+      try {
+        const response = await fetch('https://test.uma.me/api/user/umas', {
+          credentials: 'include',
+        });
+
+        console.log('response', response);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch UMAs');
+        }
+
+        const data = await response.json();
+
+        console.log('data', data);
+
+        // Get the last UMA from the array
+        if (data.umas && data.umas.length > 0) {
+          const latestUsername = data.umas[data.umas.length - 1].username;
+          setUmaAddress(latestUsername);
+          console.log('Latest UMA:', latestUsername);
+        }
+      } catch (error) {
+        console.error('Error fetching latest UMA:', error);
+      }
+    };
+
+    fetchLatestUma();
+  }, []);
+
   return (
+    <>
+    <Toaster position="top-center" richColors />
+    <div className="w-full flex justify-between p-[12px] bg-[#F9F9F9] border-b-[0.5px] border-b-[#C0C9D6]">
+      <div className="flex items-center gap-[8px]">
+        <img src="/makecents.png" className="w-[32px]"/>
+        <span className="hidden md:block text-[14px] font-bold">Makescents Demo</span>
+      </div>
+      <button
+        className="flex items-center gap-[8px] hover:opacity-50"
+        onClick={() => {
+          navigator.clipboard.writeText(`${umaAddress ?? "you"}@test.uma.me`);
+          toast(
+            <span>
+              <strong>${umaAddress ?? "you"}@test.uma.me</strong> copied to clipboard
+            </span>,
+            {
+              duration: 1000,
+            }
+          );
+        }}
+      >
+        <span className="text-[14px] font-bold">${umaAddress ?? "you"}@test.uma.me</span>
+        <img src="/copy.svg" className="w-[24px] md:w-[28px] block" />
+      </button>
+    </div>
+
+
     <div className="md:p-8 md:pb-[128px]">
       {isModalVisible && (
         <IntroModal
@@ -219,6 +283,7 @@ export default function Page() {
         />
       </div>
     </div>
+    </>
   );
 }
 
