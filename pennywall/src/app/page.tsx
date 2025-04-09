@@ -1,8 +1,9 @@
 "use client";
-
+import { Toaster, toast } from 'sonner'
 import { APP_IDENTITY_PUBKEY, NOSTR_RELAY } from "@/utils/config";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { useSearchParams } from 'next/navigation';
 
 const Redirector = dynamic(() => import("@/components/Redirector"), {
   ssr: false,
@@ -20,7 +21,38 @@ export default function Page() {
     setRedirectUri(`${window.location.origin}/pennywall`);
   }, []);
 
+
+const queryParams = useSearchParams();
+const umaAddress = queryParams.get('uma');
+
   return (
+    <>
+    <Toaster position="top-center" richColors />
+    <div className="w-full flex justify-between p-[12px] bg-[#F9F9F9] border-b-[0.5px] border-b-[#C0C9D6]">
+      <div className="flex items-center gap-[8px]">
+        <img src="/pennywall.png" className="w-[32px]"/>
+        <span className="hidden md:block text-[14px] font-bold">Pennywall Demo</span>
+      </div>
+      {umaAddress && (
+        <button
+          className="flex items-center gap-[8px] hover:opacity-50"
+        onClick={() => {
+          navigator.clipboard.writeText(`${umaAddress}@test.uma.me`);
+          toast(
+            <span>
+              <strong>${umaAddress}@test.uma.me</strong> copied to clipboard
+            </span>,
+            {
+              duration: 1000,
+            }
+          );
+        }}
+      >
+        <span className="text-[14px] font-bold">${umaAddress}@test.uma.me</span>
+          <img src="/copy.svg" className="w-[24px] md:w-[28px] block" />
+        </button>
+      )}
+    </div>
     <div className="relative min-h-screen">
       <Redirector />
       <div id="paper" className="mx-auto max-w-2xl p-5 pt-12">
@@ -40,15 +72,16 @@ export default function Page() {
             budget-period="monthly"
             style={{
               "--uma-connect-background": "rgb(37, 99, 235)",
-              "--uma-connect-radius": "50px",
-              "--uma-connect-padding-x": "20px",
-              "--uma-connect-padding-y": "6px",
+              "--uma-connect-radius": "999px",
+              "--uma-connect-padding-x": "32px",
+              "--uma-connect-padding-y": "16px",
               "--uma-connect-text-color": "#F9F9F9",
-              "--uma-connect-font-size": "12px",
+              "--uma-connect-font-size": "16px",
             }}
           />
         )}
       </div>
     </div>
+    </>
   );
 }
