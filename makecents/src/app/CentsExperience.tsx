@@ -135,7 +135,7 @@ export default function Page() {
   
   const queryParams = useSearchParams();
   const testUmaUsername = queryParams.get('uma');
-  const umaAddress = testUmaUsername ? `$${testUmaUsername}@test.uma.me` : null;
+  const umaAddress = testUmaUsername ? `${testUmaUsername}@test.uma.me` : null;
 
   return (
     <>
