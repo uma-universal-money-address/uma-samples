@@ -3,7 +3,6 @@ import { Toaster, toast } from 'sonner'
 import { APP_IDENTITY_PUBKEY, NOSTR_RELAY } from "@/utils/config";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { useSearchParams } from 'next/navigation';
 
 const Redirector = dynamic(() => import("@/components/Redirector"), {
   ssr: false,
@@ -22,8 +21,8 @@ export default function Page() {
   }, []);
 
 
-const queryParams = useSearchParams();
-const umaAddress = queryParams.get('uma');
+  const queryParams = new URLSearchParams(document.location.search);
+  const umaAddress = queryParams.get('uma');
 
   return (
     <>
