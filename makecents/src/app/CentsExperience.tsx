@@ -299,7 +299,7 @@ const CommentSection = () => {
           <div>
             <div className="flex flex-row gap-[8px] items-center">
               <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
-                @authdude
+                @theauthdude
               </p>
               <p className="text-[12px] font-[500] text-[rgba(255,255,255,0.4)] md:text-[rgba(0,0,0,0.4)]">
                 1 hour ago
