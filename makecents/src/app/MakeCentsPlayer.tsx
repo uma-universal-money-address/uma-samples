@@ -52,8 +52,8 @@ export const MakeCentsPlayer = forwardRef(
         setProgress(currentProgress);
 
         // Notify every 10% progress
-        if (Math.floor(currentProgress / 100) > lastNotifiedProgress.current) {
-          lastNotifiedProgress.current = Math.floor(currentProgress / 100);
+        if (Math.floor(currentProgress / 10) > lastNotifiedProgress.current) {
+          lastNotifiedProgress.current = Math.floor(currentProgress / 10);
           onProgressUpdate(currentProgress);
         }
       };
