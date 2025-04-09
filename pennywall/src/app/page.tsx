@@ -2,7 +2,8 @@
 import { Toaster, toast } from 'sonner'
 import { APP_IDENTITY_PUBKEY, NOSTR_RELAY } from "@/utils/config";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from 'next/navigation';
 
 const Redirector = dynamic(() => import("@/components/Redirector"), {
   ssr: false,
@@ -13,16 +14,37 @@ const UmaConnectButton = dynamic(
   { ssr: false },
 );
 
+const Header = () => {
+  const queryParams = useSearchParams();
+  const umaAddress = queryParams.get('uma');
+
+  return umaAddress ? (
+    <button
+      className="flex items-center gap-[8px] hover:opacity-50"
+    onClick={() => {
+      navigator.clipboard.writeText(`${umaAddress}@test.uma.me`);
+      toast(
+        <span>
+          <strong>${umaAddress}@test.uma.me</strong> copied to clipboard
+        </span>,
+        {
+          duration: 1000,
+        }
+      );
+    }}
+  >
+    <span className="text-[14px] font-bold">${umaAddress}@test.uma.me</span>
+      <img src="/copy.svg" className="w-[24px] md:w-[28px] block" />
+    </button>
+  ) : null;
+};
+
 export default function Page() {
   const [redirectUri, setRedirectUri] = useState("");
 
   useEffect(() => {
     setRedirectUri(`${window.location.origin}/pennywall`);
   }, []);
-
-
-  const queryParams = new URLSearchParams(document.location.search);
-  const umaAddress = queryParams.get('uma');
 
   return (
     <>
@@ -32,25 +54,9 @@ export default function Page() {
         <img src="/pennywall.png" className="w-[32px]"/>
         <span className="hidden md:block text-[14px] font-bold">Pennywall Demo</span>
       </div>
-      {umaAddress && (
-        <button
-          className="flex items-center gap-[8px] hover:opacity-50"
-        onClick={() => {
-          navigator.clipboard.writeText(`${umaAddress}@test.uma.me`);
-          toast(
-            <span>
-              <strong>${umaAddress}@test.uma.me</strong> copied to clipboard
-            </span>,
-            {
-              duration: 1000,
-            }
-          );
-        }}
-      >
-        <span className="text-[14px] font-bold">${umaAddress}@test.uma.me</span>
-          <img src="/copy.svg" className="w-[24px] md:w-[28px] block" />
-        </button>
-      )}
+      <Suspense>
+        <Header />
+      </Suspense>
     </div>
     <div className="relative min-h-screen">
       <Redirector />
