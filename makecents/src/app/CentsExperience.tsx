@@ -44,7 +44,10 @@ export default function Page() {
   const playerRef = useRef<{ restartVideo: () => void } | null>(null);
 
   useEffect(() => {
-    setRedirectUri(`${window.location.origin}/`);
+    if (typeof window !== "undefined") {
+      const currentDomain = window.location.origin;
+      setRedirectUri(`${currentDomain}/`);
+    }
   }, []);
 
   const fetchBitcoinData = () => {
@@ -232,7 +235,7 @@ export default function Page() {
                     "--uma-connect-padding-y": "16px",
                     "--uma-connect-text-color": "#F9F9F9",
                     "--uma-connect-font-size": "16px",
-                    display: redirectUri ? "block" : "hidden",
+                    display: redirectUri ? "block" : "none",
                   }}
                 />
               </div>
