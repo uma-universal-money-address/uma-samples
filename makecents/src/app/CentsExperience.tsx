@@ -232,7 +232,7 @@ export default function Page() {
                     "--uma-connect-padding-y": "16px",
                     "--uma-connect-text-color": "#F9F9F9",
                     "--uma-connect-font-size": "16px",
-                    display: redirectUri ? "block" : "hidden",
+                    display: redirectUri ? "block" : "none",
                   }}
                 />
               </div>
