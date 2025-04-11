@@ -1,13 +1,12 @@
 "use client";
 
-import { useNwcRequester, useOAuth } from "@uma-sdk/uma-auth-client";
+import { useNwcRequester } from "@uma-sdk/uma-auth-client";
 
 export const usePayToAddress = () => {
   const { nwcRequester } = useNwcRequester();
-  const { authConfig } = useOAuth();
 
   const payToAddress = async (amountCents: number) => {
-    if (!nwcRequester || !authConfig) {
+    if (!nwcRequester) {
       console.warn("No NwcRequester available.");
       return;
     }

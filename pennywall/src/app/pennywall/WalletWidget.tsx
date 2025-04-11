@@ -109,10 +109,15 @@ export default function WalletWidget({
 
   let formattedBalance = undefined;
   if (balance && btcPrice !== null) {
-    const usdBalance =
-      balance.currency?.code === "USD"
-        ? balance.balance / 100
-        : convertSatsToUsd(balance.balance, btcPrice);
+    // Temporary hack to work around the test wallet budget issue. Should be able to remove the
+    // authConfig check once https://github.com/uma-universal-money-address/uma-test-wallet/pull/131
+    // is merged and a new version is published.
+    const isUsd =
+      authConfig?.budget?.currency === "USD" ||
+      balance.currency?.code === "USD";
+    const usdBalance = isUsd
+      ? balance.balance / 100
+      : convertSatsToUsd(balance.balance, btcPrice);
     formattedBalance = `$${usdBalance.toFixed(2)}`;
   }
 
