@@ -41,7 +41,10 @@ export default function WalletWidget({
 
   const fetchBalance = async (nwcRequester: NwcRequester) => {
     try {
-      const res = await nwcRequester.getBalance();
+      const budgetCurrency = authConfig?.budget?.currency ?? "SAT";
+      const res = await nwcRequester.getBalance({
+        currency_code: budgetCurrency,
+      });
       setBalance(res);
     } catch (e) {
       console.error(e);
@@ -104,6 +107,20 @@ export default function WalletWidget({
     }
   };
 
+  let formattedBalance = undefined;
+  if (balance && btcPrice !== null) {
+    // Temporary hack to work around the test wallet budget issue. Should be able to remove the
+    // authConfig check once https://github.com/uma-universal-money-address/uma-test-wallet/pull/131
+    // is merged and a new version is published.
+    const isUsd =
+      authConfig?.budget?.currency === "USD" ||
+      balance.currency?.code === "USD";
+    const usdBalance = isUsd
+      ? balance.balance / 100
+      : convertSatsToUsd(balance.balance, btcPrice);
+    formattedBalance = `$${usdBalance.toFixed(2)}`;
+  }
+
   return (
     <>
       <div className="flex flex-row justify-between space-x-4 bg-[#f9f9f9] p-2 pb-10 pl-4 shadow-sm md:z-[-100] md:rounded-full md:pb-2">
@@ -119,9 +136,7 @@ export default function WalletWidget({
           ) : (
             balance && (
               <span className="ml-2 text-sm font-semibold text-gray-800">
-                {btcPrice !== null
-                  ? `$${convertSatsToUsd(balance.balance, btcPrice).toFixed(2)}`
-                  : "Loading..."}
+                {btcPrice !== null ? formattedBalance : "Loading..."}
               </span>
             )
           )}

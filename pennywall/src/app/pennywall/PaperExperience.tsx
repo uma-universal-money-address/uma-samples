@@ -19,7 +19,7 @@ const WalletWidget = dynamic(() => import("@/app/pennywall/WalletWidget"), {
   ssr: false,
 });
 
-const VIEWPORT_PRICE = 0.01;
+const VIEWPORT_PRICE_USD = 0.01;
 const VIEWPORT_COUNT = 9;
 
 export default function Page() {
@@ -38,8 +38,8 @@ export default function Page() {
   );
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [totalViewports] = useState(VIEWPORT_COUNT);
-  const [viewportPrice] = useState(VIEWPORT_PRICE);
-  const [pagePrice] = useState(VIEWPORT_PRICE * VIEWPORT_COUNT);
+  const [viewportPrice] = useState(VIEWPORT_PRICE_USD);
+  const [pagePrice] = useState(VIEWPORT_PRICE_USD * VIEWPORT_COUNT);
   const [amountPaid, setAmountPaid] = useState(0.0);
 
   // UMA Hooks
@@ -74,49 +74,30 @@ export default function Page() {
       throw "NWC or AuthConfig is nil";
     }
 
-    if (!btcPrice) {
-      throw `Missing BTC price information: ${btcPrice}`;
-    }
+    const centsToSend = Math.round(VIEWPORT_PRICE_USD * 100);
+    console.log("Sending USD: ", VIEWPORT_PRICE_USD);
 
-    const satsToSend = Math.round((VIEWPORT_PRICE / btcPrice) * 100000000);
-    console.log("Sending SATS: ", satsToSend);
-
-    // Debug limit
-    if (satsToSend >= 1000) {
-      throw "Sending too many SATS";
-    }
-
-    console.log(`Attempting to send ${satsToSend} sats`);
-    await payToAddress(satsToSend);
+    console.log(`Attempting to send $${VIEWPORT_PRICE_USD}`);
+    await payToAddress(centsToSend);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReady, btcPrice]);
+  }, [isReady]);
 
   const purchaseRemainderOfPage = async () => {
     if (!isReady) {
       throw "NWC or AuthConfig is nil";
     }
 
-    if (!btcPrice) {
-      throw "Missing BTC price information";
-    }
-
     const remainingPrice = pagePrice - amountPaid;
-    const satsToSend = Math.round((remainingPrice / btcPrice) * 100000000);
-
-    // Debug limit
-    if (satsToSend >= 1000) {
-      throw "Sending too many SATS";
-    }
 
     console.log(
-      `Attempting to send ${remainingPrice.toFixed(
+      `Attempting to send $${remainingPrice.toFixed(
         2,
-      )} cents (${satsToSend} sats) for the remainder of the page`,
+      )} for the remainder of the page`,
     );
 
     try {
       setPurchasingViewports((prev) => new Set(prev).add(VIEWPORT_COUNT + 1));
-      await payToAddress(satsToSend);
+      await payToAddress(Math.round(remainingPrice * 100));
       setPageUnlocked(true);
       setAmountPaid(pagePrice);
       setAvailableSectionIndex(VIEWPORT_COUNT + 1);
