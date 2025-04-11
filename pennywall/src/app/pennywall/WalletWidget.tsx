@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import {
   GetBalanceResponse,
+  GetInfoResponse,
   NwcRequester,
   UmaConnectButton,
   useNwcRequester,
@@ -35,6 +36,7 @@ export default function WalletWidget({
   const { nwcRequester } = useNwcRequester();
   const { authConfig, isConnectionValid, nwcConnectionUri } = useOAuth();
   const [balance, setBalance] = useState<GetBalanceResponse | undefined>();
+  const [info, setInfo] = useState<GetInfoResponse | undefined>();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const [redirectUri, setRedirectUri] = useState<string>("");
@@ -52,9 +54,20 @@ export default function WalletWidget({
     }
   };
 
+  const fetchInfo = async (nwcRequester: NwcRequester) => {
+    try {
+      const res = await nwcRequester.getInfo();
+      setInfo(res);
+    } catch (e) {
+      console.error(e);
+      setInfo(undefined);
+    }
+  };
+
   useEffect(() => {
     if (nwcRequester && authConfig && nwcConnectionUri && isConnectionValid()) {
       fetchBalance(nwcRequester);
+      fetchInfo(nwcRequester);
     } else {
       setBalance(undefined);
     }
@@ -108,12 +121,13 @@ export default function WalletWidget({
   };
 
   let formattedBalance = undefined;
-  if (balance && btcPrice !== null) {
+  if (balance && btcPrice !== null && info) {
     // Temporary hack to work around the test wallet budget issue. Should be able to remove the
-    // authConfig check once https://github.com/uma-universal-money-address/uma-test-wallet/pull/131
+    // info check once https://github.com/uma-universal-money-address/uma-test-wallet/pull/131
     // is merged and a new version is published.
+    const infoCurrencies = info?.currencies ?? [];
     const isUsd =
-      authConfig?.budget?.currency === "USD" ||
+      infoCurrencies[0]?.currency.code === "USD" ||
       balance.currency?.code === "USD";
     const usdBalance = isUsd
       ? balance.balance / 100
