@@ -72,7 +72,7 @@ export default function Page() {
             redirect-uri={redirectUri}
             required-commands={["get_balance", "pay_to_address"]}
             optional-commands={["list_transactions"]}
-            budget-amount="1000"
+            budget-amount="10000"
             budget-currency="USD"
             budget-period="monthly"
             style={{
