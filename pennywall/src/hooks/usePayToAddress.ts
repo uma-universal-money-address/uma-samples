@@ -29,6 +29,7 @@ export const usePayToAddress = () => {
         (amountCents / 100) / btcPrice * 100000000
       );
     }
+    console.log("Sending ", amountToSend, sendAsSats ? "sats" : "USD cents");
 
     return await nwcRequester.payToAddress({
       receiver: { lud16: "$fun-star-496@test.uma.me" },
