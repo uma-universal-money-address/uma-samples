@@ -38,16 +38,13 @@ export default function Page() {
   const [hidePlayerControls, setHidePlayuerControls] = useState(false);
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
   const [acc, setAcc] = useState<number | null>(null);
-  const [redirectUri, setRedirectUri] = useState("");
+  const [redirectUri, setRedirectUri] = useState("https://makecents.uma.me");
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const walletWidgetRef = useRef<{ refetchBalance: () => void } | null>(null);
   const playerRef = useRef<{ restartVideo: () => void } | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const currentDomain = window.location.origin;
-      setRedirectUri(`${currentDomain}/`);
-    }
+    setRedirectUri(`${window.location.origin}/`);
   }, []);
 
   const fetchBitcoinData = () => {

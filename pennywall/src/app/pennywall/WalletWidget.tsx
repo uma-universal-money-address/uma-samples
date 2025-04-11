@@ -133,7 +133,7 @@ export default function WalletWidget({
   const [info, setInfo] = useState<GetInfoResponse | undefined>();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
-  const [redirectUri, setRedirectUri] = useState<string>("");
+  const [redirectUri, setRedirectUri] = useState<string>("https://pennywall.uma.me/pennywall");
 
   const fetchBalance = async (nwcRequester: NwcRequester) => {
     try {
