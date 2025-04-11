@@ -25,10 +25,9 @@ export const usePayToAddress = () => {
       infoCurrencies.length === 0 || infoCurrencies[0]?.currency.code === "SAT";
     let amountToSend = amountCents;
     if (sendAsSats) {
-      const amountInSats = Math.round(
-        (amountCents / 100) * btcPrice * 10000000
+      amountToSend = Math.round(
+        (amountCents / 100) / btcPrice * 100000000
       );
-      amountToSend = amountInSats * 1000; // Sends as msats
     }
 
     return await nwcRequester.payToAddress({
