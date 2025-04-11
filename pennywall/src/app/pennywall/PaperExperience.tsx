@@ -12,7 +12,7 @@ const ScrollIndicator = dynamic(
   () => import("@/app/pennywall/ScrollIndicator"),
   {
     ssr: false,
-  },
+  }
 );
 
 const WalletWidget = dynamic(() => import("@/app/pennywall/WalletWidget"), {
@@ -34,7 +34,7 @@ export default function Page() {
 
   // WalletWidget State
   const [purchasingViewports, setPurchasingViewports] = useState<Set<number>>(
-    new Set(),
+    new Set()
   );
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [totalViewports] = useState(VIEWPORT_COUNT);
@@ -55,7 +55,7 @@ export default function Page() {
       return;
     }
     fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd",
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
     )
       .then((response) => response.json())
       .then((priceData) => {
@@ -73,31 +73,39 @@ export default function Page() {
     if (!isReady) {
       throw "NWC or AuthConfig is nil";
     }
+    if (!btcPrice) {
+      console.error("BTC price is not set");
+      return;
+    }
 
     const centsToSend = Math.round(VIEWPORT_PRICE_USD * 100);
     console.log("Sending USD: ", VIEWPORT_PRICE_USD);
 
     console.log(`Attempting to send $${VIEWPORT_PRICE_USD}`);
-    await payToAddress(centsToSend);
+    await payToAddress(centsToSend, btcPrice);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReady]);
+  }, [isReady, btcPrice]);
 
   const purchaseRemainderOfPage = async () => {
     if (!isReady) {
       throw "NWC or AuthConfig is nil";
+    }
+    if (!btcPrice) {
+      console.error("BTC price is not set");
+      return;
     }
 
     const remainingPrice = pagePrice - amountPaid;
 
     console.log(
       `Attempting to send $${remainingPrice.toFixed(
-        2,
-      )} for the remainder of the page`,
+        2
+      )} for the remainder of the page`
     );
 
     try {
       setPurchasingViewports((prev) => new Set(prev).add(VIEWPORT_COUNT + 1));
-      await payToAddress(Math.round(remainingPrice * 100));
+      await payToAddress(Math.round(remainingPrice * 100), btcPrice);
       setPageUnlocked(true);
       setAmountPaid(pagePrice);
       setAvailableSectionIndex(VIEWPORT_COUNT + 1);
@@ -125,7 +133,7 @@ export default function Page() {
         console.log("New desired section index:", desiredSectionIndex);
         try {
           setPurchasingViewports((prev) =>
-            new Set(prev).add(desiredSectionIndex),
+            new Set(prev).add(desiredSectionIndex)
           );
           await purchaseViewport();
           setAmountPaid(() => viewportPrice * (desiredSectionIndex - 1));
@@ -159,7 +167,7 @@ export default function Page() {
     if (typeof window !== "undefined") {
       const sections = document.querySelectorAll("article > section");
       const dimensions = Array.from(sections).map(
-        (section) => section.clientHeight,
+        (section) => section.clientHeight
       );
       setSectionDimensions(dimensions);
     }

@@ -70,7 +70,7 @@ export default function Page() {
             app-identity-pubkey={APP_IDENTITY_PUBKEY}
             nostr-relay={NOSTR_RELAY}
             redirect-uri={redirectUri}
-            required-commands={["pay_invoice", "get_balance", "pay_to_address"]}
+            required-commands={["get_balance", "pay_to_address"]}
             optional-commands={["list_transactions"]}
             budget-amount="1000"
             budget-currency="USD"
