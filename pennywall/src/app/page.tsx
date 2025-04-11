@@ -40,7 +40,7 @@ const Header = () => {
 };
 
 export default function Page() {
-  const [redirectUri, setRedirectUri] = useState("");
+  const [redirectUri, setRedirectUri] = useState("https://pennywall.uma.me/pennywall");
 
   useEffect(() => {
     setRedirectUri(`${window.location.origin}/pennywall`);

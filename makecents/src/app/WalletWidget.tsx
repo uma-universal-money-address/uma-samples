@@ -31,7 +31,7 @@ const WalletWidget = forwardRef(
     const [balance, setBalance] = useState<GetBalanceResponse | undefined>();
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const popupRef = useRef<HTMLDivElement | null>(null);
-    const [redirectUri, setRedirectUri] = useState<string>("");
+    const [redirectUri, setRedirectUri] = useState<string>("https://makecents.uma.me");
 
     const fetchBalance = async (nwcRequester: NwcRequester) => {
       try {

@@ -38,16 +38,36 @@ export default function Page() {
   const [hidePlayerControls, setHidePlayuerControls] = useState(false);
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
   const [acc, setAcc] = useState<number | null>(null);
-  const [redirectUri, setRedirectUri] = useState("");
+  const [redirectUri, setRedirectUri] = useState("https://makecents.uma.me");
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const walletWidgetRef = useRef<{ refetchBalance: () => void } | null>(null);
   const playerRef = useRef<{ restartVideo: () => void } | null>(null);
+  const [umaAddress, setUmaAddress] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const currentDomain = window.location.origin;
-      setRedirectUri(`${currentDomain}/`);
+      setRedirectUri(`${window.location.origin}/`);
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchUmaAddress = async () => {
+      try {
+        const response = await fetch('https://test.uma.me/api/user/umas', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await response.json();
+        if (Array.isArray(data.umas) && data.umas.length > 0) {
+          const lastUma = data.umas[data.umas.length - 1];
+          setUmaAddress(lastUma.username);
+        }
+      } catch (error) {
+        console.error('Error fetching UMA Address:', error);
+      }
+    };
+
+    fetchUmaAddress();
   }, []);
 
   const fetchBitcoinData = () => {
@@ -134,10 +154,6 @@ export default function Page() {
     const btcAmount = sats / 100000000;
     return btcAmount * btcPrice;
   };
-
-  
-  const queryParams = useSearchParams();
-  const umaAddress = queryParams.get('uma');
 
   return (
     <>
