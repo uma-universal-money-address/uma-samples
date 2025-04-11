@@ -15,12 +15,13 @@ export const usePayToAddress = () => {
       return;
     }
 
-    if (!info) {
-      const info = await getInfo();
-      setInfo(info);
+    let fetchedInfo = info;
+    if (!fetchedInfo) {
+      fetchedInfo = await getInfo();
+      setInfo(fetchedInfo);
     }
 
-    const infoCurrencies = info?.currencies ?? [];
+    const infoCurrencies = fetchedInfo?.currencies ?? [];
     const sendAsSats =
       infoCurrencies.length === 0 || infoCurrencies[0]?.currency.code === "SAT";
     let amountToSend = amountCents;
