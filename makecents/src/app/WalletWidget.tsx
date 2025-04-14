@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import {
   GetBalanceResponse,
+  GetInfoResponse,
   NwcRequester,
   UmaConnectButton,
   useNwcRequester,
@@ -29,13 +30,17 @@ const WalletWidget = forwardRef(
     const { nwcRequester } = useNwcRequester();
     const { authConfig, isConnectionValid, nwcConnectionUri } = useOAuth();
     const [balance, setBalance] = useState<GetBalanceResponse | undefined>();
+    const [walletCurrency, setWalletCurrency] = useState<string>("SAT");
+    const [info, setInfo] = useState<GetInfoResponse | undefined>();
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const popupRef = useRef<HTMLDivElement | null>(null);
     const [redirectUri, setRedirectUri] = useState<string>("");
 
     const fetchBalance = async (nwcRequester: NwcRequester) => {
       try {
-        const res = await nwcRequester.getBalance();
+        const res = await nwcRequester.getBalance({
+          currency_code: walletCurrency,
+        });
         setBalance(res);
       } catch (e) {
         console.error(e);
@@ -57,6 +62,18 @@ const WalletWidget = forwardRef(
       },
     }));
 
+    const fetchInfo = async (nwcRequester: NwcRequester) => {
+      try {
+        const res = await nwcRequester.getInfo();
+        setInfo(res);
+        setWalletCurrency(res?.currencies?.[0]?.currency.code ?? "SAT");
+        fetchBalance(nwcRequester);
+      } catch (e) {
+        console.error(e);
+        setInfo(undefined);
+      }
+    };
+
     useEffect(() => {
       if (
         nwcRequester &&
@@ -64,7 +81,7 @@ const WalletWidget = forwardRef(
         nwcConnectionUri &&
         isConnectionValid()
       ) {
-        fetchBalance(nwcRequester);
+        fetchInfo(nwcRequester);
       } else {
         setBalance(undefined);
       }
@@ -108,6 +125,28 @@ const WalletWidget = forwardRef(
       return btcAmount * btcPrice;
     };
 
+    const getCurrencySymbol = (currencyCode: string) => {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currencyCode,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(0).replace(/[0-9]/g, '').trim();
+    };
+
+    let formattedBalance = undefined;
+    if (balance && btcPrice !== null && info) {
+      // Temporary hack to work around the test wallet budget issue. Should be able to remove the
+      // info check once https://github.com/uma-universal-money-address/uma-test-wallet/pull/131
+      // is merged and a new version is published.
+      const isFiat = walletCurrency !== "SAT";
+      const fiatBalance = isFiat
+        ? balance.balance / 100
+        : convertSatsToUsd(balance.balance, btcPrice);
+      const symbol = isFiat ? getCurrencySymbol(walletCurrency) : "SAT";
+      formattedBalance = `${symbol}${fiatBalance.toFixed(2)}`;
+    }
+
     // const [buttonHeight, setButtonHeight] = useState("32px");
 
     // useEffect(() => {
@@ -142,9 +181,7 @@ const WalletWidget = forwardRef(
               balance && (
                 <span className="ml-2 text-[14px] font-bold text-white md:text-[#161718]">
                   {btcPrice !== null
-                    ? `$${convertSatsToUsd(balance.balance, btcPrice).toFixed(
-                        2
-                      )}`
+                    ? formattedBalance
                     : "Loading..."}
                 </span>
               )

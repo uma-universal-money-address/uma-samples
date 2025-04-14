@@ -36,6 +36,7 @@ export default function WalletWidget({
   const { nwcRequester } = useNwcRequester();
   const { authConfig, isConnectionValid, nwcConnectionUri } = useOAuth();
   const [balance, setBalance] = useState<GetBalanceResponse | undefined>();
+  const [walletCurrency, setWalletCurrency] = useState<string>("SAT");
   const [info, setInfo] = useState<GetInfoResponse | undefined>();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -43,9 +44,8 @@ export default function WalletWidget({
 
   const fetchBalance = async (nwcRequester: NwcRequester) => {
     try {
-      const budgetCurrency = authConfig?.budget?.currency ?? "SAT";
       const res = await nwcRequester.getBalance({
-        currency_code: budgetCurrency,
+        currency_code: walletCurrency,
       });
       setBalance(res);
     } catch (e) {
@@ -58,6 +58,8 @@ export default function WalletWidget({
     try {
       const res = await nwcRequester.getInfo();
       setInfo(res);
+      setWalletCurrency(res?.currencies?.[0]?.currency.code ?? "SAT");
+      fetchBalance(nwcRequester);
     } catch (e) {
       console.error(e);
       setInfo(undefined);
@@ -66,7 +68,6 @@ export default function WalletWidget({
 
   useEffect(() => {
     if (nwcRequester && authConfig && nwcConnectionUri && isConnectionValid()) {
-      fetchBalance(nwcRequester);
       fetchInfo(nwcRequester);
     } else {
       setBalance(undefined);
@@ -114,6 +115,15 @@ export default function WalletWidget({
     return btcAmount * btcPrice;
   };
 
+  const getCurrencySymbol = (currencyCode: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currencyCode,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(0).replace(/[0-9]/g, '').trim();
+  };
+
   const handleUnlockPage = () => {
     if (onUnlockPage) {
       onUnlockPage();
@@ -125,14 +135,12 @@ export default function WalletWidget({
     // Temporary hack to work around the test wallet budget issue. Should be able to remove the
     // info check once https://github.com/uma-universal-money-address/uma-test-wallet/pull/131
     // is merged and a new version is published.
-    const infoCurrencies = info?.currencies ?? [];
-    const isUsd =
-      infoCurrencies[0]?.currency.code === "USD" ||
-      balance.currency?.code === "USD";
-    const usdBalance = isUsd
+    const isFiat = walletCurrency !== "SAT";
+    const fiatBalance = isFiat
       ? balance.balance / 100
       : convertSatsToUsd(balance.balance, btcPrice);
-    formattedBalance = `$${usdBalance.toFixed(2)}`;
+    const symbol = isFiat ? getCurrencySymbol(walletCurrency) : "SAT";
+    formattedBalance = `${symbol}${fiatBalance.toFixed(2)}`;
   }
 
   return (
