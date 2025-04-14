@@ -23,6 +23,99 @@ type WalletWidgetProps = {
   onUnlockPage?: () => void;
 };
 
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  JPY: "¥",
+  NGN: "₦",
+  INR: "₹",
+  KRW: "₩",
+  CNY: "¥",
+  RUB: "₽",
+  BRL: "R$",
+  AUD: "A$",
+  CAD: "C$",
+  CHF: "Fr",
+  SEK: "kr",
+  NOK: "kr",
+  DKK: "kr",
+  PLN: "zł",
+  HUF: "Ft",
+  CZK: "Kč",
+  ILS: "₪",
+  PHP: "₱",
+  THB: "฿",
+  MYR: "RM",
+  SGD: "S$",
+  NZD: "NZ$",
+  ZAR: "R",
+  HKD: "HK$",
+  MXN: "Mex$",
+  TRY: "₺",
+  AED: "د.إ",
+  SAR: "﷼",
+  QAR: "﷼",
+  KWD: "د.ك",
+  BHD: ".د.ب",
+  OMR: "﷼",
+  JOD: "د.ا",
+  LBP: "ل.ل",
+  EGP: "ج.م",
+  TWD: "NT$",
+  VND: "₫",
+  IDR: "Rp",
+  PKR: "₨",
+  BDT: "৳",
+  LKR: "රු",
+  NPR: "₨",
+  MMK: "K",
+  KHR: "៛",
+  LAK: "₭",
+  MNT: "₮",
+  UZS: "лв",
+  KZT: "₸",
+  GEL: "₾",
+  AMD: "֏",
+  AZN: "₼",
+  BYN: "Br",
+  MDL: "L",
+  RON: "lei",
+  UAH: "₴",
+  BGN: "лв",
+  HRK: "kn",
+  RSD: "дин",
+  MKD: "ден",
+  ALL: "L",
+  BAM: "KM",
+  SAT: "SAT",
+};
+
+function getCurrencySymbol(currencyCode: string): string {
+  // First try the map
+  if (CURRENCY_SYMBOLS[currencyCode]) {
+    return CURRENCY_SYMBOLS[currencyCode];
+  }
+
+  // Fallback to Intl.NumberFormat
+  try {
+    const formatter = new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: currencyCode,
+      currencyDisplay: "symbol",
+    });
+    const parts = formatter.formatToParts(1);
+    const currencyPart = parts.find((part) => part.type === "currency");
+    return currencyPart?.value || currencyCode;
+  } catch (error) {
+    console.error(
+      `Error getting symbol for currency code ${currencyCode}:`,
+      error
+    );
+    return currencyCode;
+  }
+}
+
 export default function WalletWidget({
   viewportPrice = 0,
   pagePrice = 0,
@@ -36,7 +129,7 @@ export default function WalletWidget({
   const { nwcRequester } = useNwcRequester();
   const { authConfig, isConnectionValid, nwcConnectionUri } = useOAuth();
   const [balance, setBalance] = useState<GetBalanceResponse | undefined>();
-  const [walletCurrency, setWalletCurrency] = useState<string>("SAT");
+  const [walletCurrency, setWalletCurrency] = useState<string | undefined>();
   const [info, setInfo] = useState<GetInfoResponse | undefined>();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -44,10 +137,12 @@ export default function WalletWidget({
 
   const fetchBalance = async (nwcRequester: NwcRequester) => {
     try {
-      const res = await nwcRequester.getBalance({
-        currency_code: walletCurrency,
-      });
-      setBalance(res);
+      if (walletCurrency) {
+        const res = await nwcRequester.getBalance({
+          currency_code: walletCurrency,
+        });
+        setBalance(res);
+      }
     } catch (e) {
       console.error(e);
       setBalance(undefined);
@@ -58,6 +153,7 @@ export default function WalletWidget({
     try {
       const res = await nwcRequester.getInfo();
       setInfo(res);
+      console.log(res?.currencies?.[0]?.currency.code);
       setWalletCurrency(res?.currencies?.[0]?.currency.code ?? "SAT");
       fetchBalance(nwcRequester);
     } catch (e) {
@@ -77,6 +173,7 @@ export default function WalletWidget({
     nwcRequester,
     authConfig,
     amountPaid,
+    walletCurrency,
     nwcConnectionUri,
     isConnectionValid,
   ]);
@@ -110,20 +207,6 @@ export default function WalletWidget({
     };
   }, [isPopupVisible]);
 
-  const convertSatsToUsd = (sats: number, btcPrice: number) => {
-    const btcAmount = sats / 100000000;
-    return btcAmount * btcPrice;
-  };
-
-  const getCurrencySymbol = (currencyCode: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currencyCode,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(0).replace(/[0-9]/g, '').trim();
-  };
-
   const handleUnlockPage = () => {
     if (onUnlockPage) {
       onUnlockPage();
@@ -131,16 +214,13 @@ export default function WalletWidget({
   };
 
   let formattedBalance = undefined;
-  if (balance && btcPrice !== null && info) {
-    // Temporary hack to work around the test wallet budget issue. Should be able to remove the
-    // info check once https://github.com/uma-universal-money-address/uma-test-wallet/pull/131
-    // is merged and a new version is published.
+  if (balance && btcPrice !== null && info && walletCurrency) {
     const isFiat = walletCurrency !== "SAT";
     const fiatBalance = isFiat
-      ? balance.balance / 100
-      : convertSatsToUsd(balance.balance, btcPrice);
+      ? (balance.balance / 100).toFixed(2)
+      : balance.balance;
     const symbol = isFiat ? getCurrencySymbol(walletCurrency) : "SAT";
-    formattedBalance = `${symbol}${fiatBalance.toFixed(2)}`;
+    formattedBalance = `${symbol}${fiatBalance}`;
   }
 
   return (
