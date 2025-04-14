@@ -153,7 +153,6 @@ export default function WalletWidget({
     try {
       const res = await nwcRequester.getInfo();
       setInfo(res);
-      console.log(res?.currencies?.[0]?.currency.code);
       setWalletCurrency(res?.currencies?.[0]?.currency.code ?? "SAT");
       fetchBalance(nwcRequester);
     } catch (e) {
