@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import {
   GetBalanceResponse,
+  GetInfoResponse,
   NwcRequester,
   UmaConnectButton,
   useNwcRequester,
@@ -29,14 +30,20 @@ const WalletWidget = forwardRef(
     const { nwcRequester } = useNwcRequester();
     const { authConfig, isConnectionValid, nwcConnectionUri } = useOAuth();
     const [balance, setBalance] = useState<GetBalanceResponse | undefined>();
+    const [walletCurrency, setWalletCurrency] = useState<string | undefined>();
+    const [info, setInfo] = useState<GetInfoResponse | undefined>();
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const popupRef = useRef<HTMLDivElement | null>(null);
     const [redirectUri, setRedirectUri] = useState<string>("https://makecents.uma.me");
 
     const fetchBalance = async (nwcRequester: NwcRequester) => {
       try {
-        const res = await nwcRequester.getBalance();
-        setBalance(res);
+        if (walletCurrency) {
+          const res = await nwcRequester.getBalance({
+            currency_code: walletCurrency,
+          });
+          setBalance(res);
+        }
       } catch (e) {
         console.error(e);
         setBalance(undefined);
@@ -57,6 +64,18 @@ const WalletWidget = forwardRef(
       },
     }));
 
+    const fetchInfo = async (nwcRequester: NwcRequester) => {
+      try {
+        const res = await nwcRequester.getInfo();
+        setInfo(res);
+        setWalletCurrency(res?.currencies?.[0]?.currency.code ?? "SAT");
+        fetchBalance(nwcRequester);
+      } catch (e) {
+        console.error(e);
+        setInfo(undefined);
+      }
+    };
+
     useEffect(() => {
       if (
         nwcRequester &&
@@ -64,12 +83,18 @@ const WalletWidget = forwardRef(
         nwcConnectionUri &&
         isConnectionValid()
       ) {
-        fetchBalance(nwcRequester);
+        fetchInfo(nwcRequester);
       } else {
         setBalance(undefined);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nwcRequester, authConfig, nwcConnectionUri, isConnectionValid]);
+    }, [
+      nwcRequester,
+      authConfig,
+      nwcConnectionUri,
+      isConnectionValid,
+      walletCurrency,
+    ]);
 
     useEffect(() => {
       // Set the redirect URI based on the current domain
@@ -108,6 +133,109 @@ const WalletWidget = forwardRef(
       return btcAmount * btcPrice;
     };
 
+    const CURRENCY_SYMBOLS: Record<string, string> = {
+      USD: "$",
+      EUR: "€",
+      GBP: "£",
+      JPY: "¥",
+      NGN: "₦",
+      INR: "₹",
+      KRW: "₩",
+      CNY: "¥",
+      RUB: "₽",
+      BRL: "R$",
+      AUD: "A$",
+      CAD: "C$",
+      CHF: "Fr",
+      SEK: "kr",
+      NOK: "kr",
+      DKK: "kr",
+      PLN: "zł",
+      HUF: "Ft",
+      CZK: "Kč",
+      ILS: "₪",
+      PHP: "₱",
+      THB: "฿",
+      MYR: "RM",
+      SGD: "S$",
+      NZD: "NZ$",
+      ZAR: "R",
+      HKD: "HK$",
+      MXN: "Mex$",
+      TRY: "₺",
+      AED: "د.إ",
+      SAR: "﷼",
+      QAR: "﷼",
+      KWD: "د.ك",
+      BHD: ".د.ب",
+      OMR: "﷼",
+      JOD: "د.ا",
+      LBP: "ل.ل",
+      EGP: "ج.م",
+      TWD: "NT$",
+      VND: "₫",
+      IDR: "Rp",
+      PKR: "₨",
+      BDT: "৳",
+      LKR: "රු",
+      NPR: "₨",
+      MMK: "K",
+      KHR: "៛",
+      LAK: "₭",
+      MNT: "₮",
+      UZS: "лв",
+      KZT: "₸",
+      GEL: "₾",
+      AMD: "֏",
+      AZN: "₼",
+      BYN: "Br",
+      MDL: "L",
+      RON: "lei",
+      UAH: "₴",
+      BGN: "лв",
+      HRK: "kn",
+      RSD: "дин",
+      MKD: "ден",
+      ALL: "L",
+      BAM: "KM",
+      SAT: "SAT",
+    };
+
+    function getCurrencySymbol(currencyCode: string): string {
+      // First try the map
+      if (CURRENCY_SYMBOLS[currencyCode]) {
+        return CURRENCY_SYMBOLS[currencyCode];
+      }
+
+      // Fallback to Intl.NumberFormat
+      try {
+        const formatter = new Intl.NumberFormat(undefined, {
+          style: "currency",
+          currency: currencyCode,
+          currencyDisplay: "symbol",
+        });
+        const parts = formatter.formatToParts(1);
+        const currencyPart = parts.find((part) => part.type === "currency");
+        return currencyPart?.value || currencyCode;
+      } catch (error) {
+        console.error(
+          `Error getting symbol for currency code ${currencyCode}:`,
+          error
+        );
+        return currencyCode;
+      }
+    }
+
+    let formattedBalance = undefined;
+    if (balance && btcPrice !== null && info && walletCurrency) {
+      const isFiat = walletCurrency !== "SAT";
+      const fiatBalance = isFiat
+        ? (balance.balance / 100).toFixed(2)
+        : balance.balance;
+      const symbol = isFiat ? getCurrencySymbol(walletCurrency) : "SAT";
+      formattedBalance = `${symbol}${fiatBalance}`;
+    }
+
     // const [buttonHeight, setButtonHeight] = useState("32px");
 
     // useEffect(() => {
@@ -141,11 +269,7 @@ const WalletWidget = forwardRef(
             ) : (
               balance && (
                 <span className="ml-2 text-[14px] font-bold text-white md:text-[#161718]">
-                  {btcPrice !== null
-                    ? `$${convertSatsToUsd(balance.balance, btcPrice).toFixed(
-                        2
-                      )}`
-                    : "Loading..."}
+                  {btcPrice !== null ? formattedBalance : "Loading..."}
                 </span>
               )
             )}

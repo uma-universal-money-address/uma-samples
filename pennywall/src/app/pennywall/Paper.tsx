@@ -13,7 +13,6 @@ export default function Paper({
 }: PaperProps) {
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
       const sections = document.querySelectorAll("article > section");
       const viewportHeight = window.innerHeight;
 
