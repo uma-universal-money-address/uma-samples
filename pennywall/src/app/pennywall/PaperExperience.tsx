@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { usePayToAddress } from "@/hooks/usePayToAddress";
 import useUmaIsReady from "@/hooks/useUmaIsReady";
 import { useCallback, useEffect, useState } from "react";
+import { useAppState } from "@/hooks/useAppState";
 
 const ScrollIndicator = dynamic(
   () => import("@/app/pennywall/ScrollIndicator"),
@@ -45,6 +46,7 @@ export default function Page() {
   // UMA Hooks
   const { isReady } = useUmaIsReady();
   const { payToAddress } = usePayToAddress();
+  const { walletCurrency } = useAppState();
 
   // Price State
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
@@ -73,18 +75,14 @@ export default function Page() {
     if (!isReady) {
       throw "NWC or AuthConfig is nil";
     }
-    if (!btcPrice) {
-      console.error("BTC price is not set");
-      return;
-    }
 
     const centsToSend = Math.round(VIEWPORT_PRICE_USD * 100);
     console.log("Sending USD: ", VIEWPORT_PRICE_USD);
 
     console.log(`Attempting to send $${VIEWPORT_PRICE_USD}`);
-    await payToAddress(centsToSend, btcPrice);
+    await payToAddress(centsToSend, walletCurrency);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReady, btcPrice]);
+  }, [isReady, walletCurrency]);
 
   const purchaseRemainderOfPage = async () => {
     if (!isReady) {
@@ -105,7 +103,7 @@ export default function Page() {
 
     try {
       setPurchasingViewports((prev) => new Set(prev).add(VIEWPORT_COUNT + 1));
-      await payToAddress(Math.round(remainingPrice * 100), btcPrice);
+      await payToAddress(Math.round(remainingPrice * 100), walletCurrency);
       setPageUnlocked(true);
       setAmountPaid(pagePrice);
       setAvailableSectionIndex(VIEWPORT_COUNT + 1);
