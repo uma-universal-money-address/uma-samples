@@ -3,10 +3,6 @@
 
 import { webln } from "@getalby/sdk";
 import { NextResponse } from "next/server";
-import { NOSTR_RELAY } from "@/utils/config";
-
-import WebSocket from "ws";
-// global.WebSocket = WebSocket as any;
 
 async function umaPayment(
   umaAddress: string,
@@ -26,17 +22,14 @@ async function umaPayment(
     await nwc.enable();
 
     console.log("Attempting payment...");
-    console.log("Payload:", {
+    const payload = {
       receiver: { lud16: umaAddress },
       sending_currency_code: currency,
       sending_currency_amount: amount,
-    });
+    };
+    console.log("Payload:", payload);
 
-    const response = await nwc.client.payToAddress({
-      receiver: { lud16: umaAddress },
-      sending_currency_code: currency,
-      sending_currency_amount: amount,
-    });
+    const response = await nwc.client.payToAddress(payload);
 
     return response;
   } catch (error) {
@@ -47,8 +40,8 @@ async function umaPayment(
 
 export async function POST(req: Request) {
   const { umaAddress } = await req.json();
-  const amount = 100;
-  const currency = "SAT";
+  const amount = 8;
+  const currency = "USD";
 
   if (!umaAddress || !amount || !currency) {
     return NextResponse.json(
