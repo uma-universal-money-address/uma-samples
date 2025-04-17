@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import { usePayToAddress } from "@/hooks/usePayToAddress";
 import useUmaIsReady from "@/hooks/useUmaIsReady";
 import { useCallback, useEffect, useState } from "react";
-import { useAppState } from "@/hooks/useAppState";
 
 const ScrollIndicator = dynamic(
   () => import("@/app/pennywall/ScrollIndicator"),
@@ -46,7 +45,6 @@ export default function Page() {
   // UMA Hooks
   const { isReady } = useUmaIsReady();
   const { payToAddress } = usePayToAddress();
-  const { walletCurrency } = useAppState();
 
   // Price State
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
@@ -80,9 +78,9 @@ export default function Page() {
     console.log("Sending USD: ", VIEWPORT_PRICE_USD);
 
     console.log(`Attempting to send $${VIEWPORT_PRICE_USD}`);
-    await payToAddress(centsToSend, walletCurrency);
+    await payToAddress(centsToSend);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReady, walletCurrency]);
+  }, [isReady]);
 
   const purchaseRemainderOfPage = async () => {
     if (!isReady) {
@@ -103,7 +101,7 @@ export default function Page() {
 
     try {
       setPurchasingViewports((prev) => new Set(prev).add(VIEWPORT_COUNT + 1));
-      await payToAddress(Math.round(remainingPrice * 100), walletCurrency);
+      await payToAddress(Math.round(remainingPrice * 100));
       setPageUnlocked(true);
       setAmountPaid(pagePrice);
       setAvailableSectionIndex(VIEWPORT_COUNT + 1);
